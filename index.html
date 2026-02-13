@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nagamani portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Nagamani 🌈 Portfolio</h1>
+    <button onclick="toggleMode()" class="mode-btn">🌙 / ☀️</button>
+</header>
+
+<section class="projects">
+
+   <div class="card">
+        <h2>snake 🎮</h2>
+
+    <iframe id="gameFrame" src="snake/index.html"></iframe>
+
+    <div class="game-buttons">
+        <button onclick="runGame()">▶ Run Game</button>
+        <button onclick="stopGame()">⏹ Stop Game</button>
+        <a href="snake/index.html" target="_blank" class="play-link">
+        <button on click="full screen()"> 🔳 Full Screen</button>
+        </a>
+      </div>
+</div>
+
+    <div class="card">
+        <h2>Website 2</h2>
+        <iframe src="projects/website2/index.html"></iframe>
+    </div>
+
+    <div class="card">
+        <h2>Website 3</h2>
+        <iframe src="projects/website3/index.html"></iframe>
+    </div>
+
+    <div class="card">
+        <h2>Website 4</h2>
+        <iframe src="projects/website4/index.html"></iframe>
+    </div>
+
+    <div class="card">
+    <h2>Flappy Game 🎮</h2>
+
+    <iframe id="gameFrame" src="projects/index.html"></iframe>
+
+    <div class="game-buttons">
+        <button onclick="runGame()">▶ Run Game</button>
+        <button onclick="stopGame()">⏹ Stop Game</button>
+        <a href="projects/index.html" target="_blank" class="play-link">
+        <button on click="full screen()"> 🔳 Full Screen</button>
+        </a>
+    </div>
+</div>
+  
+
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>

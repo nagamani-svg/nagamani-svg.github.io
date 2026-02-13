@@ -1,65 +1,184 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Nagamani portfolio</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flappy Game</title>
+
+<style>
+body{
+    margin:0;
+    text-align:center;
+    font-family:Arial;
+    background:linear-gradient(to bottom,#4ec0ca,#ffffff);
+}
+
+h1{
+    margin:10px;
+}
+
+#gameArea{
+    position:relative;
+    margin:auto;
+    width:100%;
+    max-width:500px;
+    height:500px;
+    background:#70c5ce;
+    overflow:hidden;
+    border:4px solid black;
+}
+
+#bird{
+    position:absolute;
+    width:40px;
+    height:40px;
+    background:yellow;
+    border-radius:50%;
+    top:200px;
+    left:80px;
+}
+
+.pipe{
+    position:absolute;
+    width:60px;
+    background:green;
+}
+
+#menu{
+    margin:10px;
+}
+
+button{
+    padding:12px 30px;
+    font-size:18px;
+    margin:5px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:orange;
+}
+
+#gameOver{
+    position:absolute;
+    top:200px;
+    width:100%;
+    text-align:center;
+    display:none;
+}
+</style>
 </head>
 <body>
 
-<header>
-    <h1>Nagamani 🌈 Portfolio</h1>
-    <button onclick="toggleMode()" class="mode-btn">🌙 / ☀️</button>
-</header>
-
-<section class="projects">
-
-   <div class="card">
-        <h2>snake 🎮</h2>
-
-    <iframe id="gameFrame" src="snake/index.html"></iframe>
-
-    <div class="game-buttons">
-        <button onclick="runGame()">▶ Run Game</button>
-        <button onclick="stopGame()">⏹ Stop Game</button>
-        <a href="snake/index.html" target="_blank" class="play-link">
-        <button on click="full screen()"> 🔳 Full Screen</button>
-        </a>
-      </div>
+<h1>Flappy Bird 🎮</h1>
+<div id="menu">
+    <button onclick="startGame()">START</button>
+    <button onclick="exitGame()">EXIT</button>
 </div>
 
-    <div class="card">
-        <h2>Website 2</h2>
-        <iframe src="projects/website2/index.html"></iframe>
-    </div>
-
-    <div class="card">
-        <h2>Website 3</h2>
-        <iframe src="projects/website3/index.html"></iframe>
-    </div>
-
-    <div class="card">
-        <h2>Website 4</h2>
-        <iframe src="projects/website4/index.html"></iframe>
-    </div>
-
-    <div class="card">
-    <h2>Flappy Game 🎮</h2>
-
-    <iframe id="gameFrame" src="projects/index.html"></iframe>
-
-    <div class="game-buttons">
-        <button onclick="runGame()">▶ Run Game</button>
-        <button onclick="stopGame()">⏹ Stop Game</button>
-        <a href="projects/index.html" target="_blank" class="play-link">
-        <button on click="full screen()"> 🔳 Full Screen</button>
-        </a>
+<div id="gameArea">
+    <div id="bird"></div>
+    <div id="gameOver">
+        <h2>GAME OVER</h2>
+        <button onclick="startGame()">RESTART</button>
     </div>
 </div>
-  
 
-</section>
+<script>
+let bird = document.getElementById("bird");
+let gameArea = document.getElementById("gameArea");
+let gameOverBox = document.getElementById("gameOver");
 
-<script src="script.js"></script>
+let gravity = 0.6;
+let velocity = 0;
+let birdY = 200;
+let score = 0;
+let gameRunning = false;
+
+function startGame(){
+    document.querySelectorAll(".pipe").forEach(p=>p.remove());
+    birdY = 200;
+    velocity = 0;
+    gameRunning = true;
+    gameOverBox.style.display="none";
+}
+
+function exitGame(){
+    gameRunning = false;
+    document.querySelectorAll(".pipe").forEach(p=>p.remove());
+}
+
+function jump(){
+    if(gameRunning){
+        velocity = -8;
+    }
+}
+
+document.addEventListener("keydown", jump);
+document.addEventListener("touchstart", jump);
+
+function createPipe(){
+    if(!gameRunning) return;
+
+    let pipeTopHeight = Math.random()*200+50;
+    let gap = 150;
+
+    let pipeTop = document.createElement("div");
+    pipeTop.classList.add("pipe");
+    pipeTop.style.height = pipeTopHeight+"px";
+    pipeTop.style.top="0px";
+    pipeTop.style.left="500px";
+
+    let pipeBottom = document.createElement("div");
+    pipeBottom.classList.add("pipe");
+    pipeBottom.style.height=(500-pipeTopHeight-gap)+"px";
+    pipeBottom.style.bottom="0px";
+    pipeBottom.style.left="500px";
+
+    gameArea.appendChild(pipeTop);
+    gameArea.appendChild(pipeBottom);
+
+    let move = setInterval(()=>{
+        let left = parseInt(pipeTop.style.left);
+        pipeTop.style.left = left-3+"px";
+        pipeBottom.style.left = left-3+"px";
+
+        if(left<-60){
+            pipeTop.remove();
+            pipeBottom.remove();
+            clearInterval(move);
+        }
+
+        if(
+            left<120 && left>40 &&
+            (birdY<pipeTopHeight || birdY>pipeTopHeight+gap)
+        ){
+            gameOver();
+        }
+
+    },20);
+}
+
+setInterval(createPipe,2000);
+
+function gameOver(){
+    gameRunning=false;
+    gameOverBox.style.display="block";
+}
+
+function gameLoop(){
+    if(gameRunning){
+        velocity+=gravity;
+        birdY+=velocity;
+        bird.style.top=birdY+"px";
+
+        if(birdY>460 || birdY<0){
+            gameOver();
+        }
+    }
+    requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
+
 </body>
 </html>
